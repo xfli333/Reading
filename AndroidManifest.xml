@@ -17,6 +17,7 @@
         <activity android:name=".BookListActivity"/>
         <activity android:name=".ChapterListActivity"/>
         <activity android:name=".MenuListActivity"/>
+        <activity android:name=".ShowContentActivity"/>
     </application>
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>

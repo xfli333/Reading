@@ -1,6 +1,7 @@
 package info.ishared.reading;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -30,8 +31,8 @@ import java.util.Map;
 public class BookListActivity extends Activity {
     private GridView mGridView;
     private List<Map<String, Object>> gridItems = new ArrayList<Map<String, Object>>();
-    private Handler mHandler;
     private String bookNumber;
+    private String chapterSize;
     private SimpleAdapter adapter;
 
     @Override
@@ -56,6 +57,7 @@ public class BookListActivity extends Activity {
                 item.put("bookName", "流氓高手");
             }
             item.put("bookNumber", "101010");
+            item.put("chapterSize", "23");
             gridItems.add(item);
         }
     }
@@ -65,7 +67,7 @@ public class BookListActivity extends Activity {
      * 初始化 grid View
      */
     private void initGridViewGUI() {
-        adapter = new SimpleAdapter(this, gridItems, R.layout.grid_view_item, new String[]{"bookIcon","bookNumber"}, new int[]{R.id.ItemImage,R.id.ItemText});
+        adapter = new SimpleAdapter(this, gridItems, R.layout.grid_view_item, new String[]{"bookIcon","bookName"}, new int[]{R.id.ItemImage,R.id.ItemText});
 
         mGridView = (GridView) findViewById(R.id.gridView);
         mGridView.setSelector(new ColorDrawable(Color.LTGRAY));
@@ -74,8 +76,12 @@ public class BookListActivity extends Activity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 bookNumber = (String) gridItems.get(position).get("bookNumber");
+                chapterSize = (String) gridItems.get(position).get("chapterSize");
 //                testReadFile(bookNumber);
-                PageJumpUtils.jump(BookListActivity.this,ChapterListActivity.class);
+                Intent intent = new Intent(BookListActivity.this, ChapterListActivity.class);
+                intent.putExtra("bookNumber", bookNumber);
+                intent.putExtra("chapterSize", chapterSize);
+                BookListActivity.this.startActivity(intent);
             }
         });
         mGridView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
