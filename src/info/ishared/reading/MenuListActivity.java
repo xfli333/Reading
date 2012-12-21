@@ -34,12 +34,6 @@ public class MenuListActivity extends Activity {
     private void initListViewGUI() {
         adapter = new ArrayAdapter<String>(this, android.R.layout.simple_expandable_list_item_1,getData());
         mListView.setAdapter(adapter);
-        mListView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-            }
-        });
     }
 
     private List<String> getData() {
