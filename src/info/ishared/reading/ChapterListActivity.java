@@ -8,6 +8,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import info.ishared.reading.util.PageJumpUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +40,7 @@ public class ChapterListActivity extends Activity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Log.d(AppConfig.TAG,i+"");
+                PageJumpUtils.jump(ChapterListActivity.this,MenuListActivity.class);
             }
         });
     }
