@@ -6,7 +6,7 @@
               android:layout_height="fill_parent"
               android:background="@drawable/chapter_list_bg">
     <ListView
-            android:id="@+id/chapter_list_view"
+            android:id="@+id/menu_list_view"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:cacheColorHint="#00000000">
