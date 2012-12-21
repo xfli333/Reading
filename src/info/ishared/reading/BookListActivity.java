@@ -1,6 +1,8 @@
 package info.ishared.reading;
 
 import android.app.Activity;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
@@ -40,8 +42,13 @@ public class BookListActivity extends Activity {
 
         for (int i = 0; i < 15; i++) {
             Map<String, Object> item = new HashMap<String, Object>();
-            item.put("bookIcon", R.drawable.l2_book02_on);
-            item.put("bookNumber", "number" + i);
+            if(i%2==0) {
+                item.put("bookIcon", R.drawable.icon_test);
+                item.put("bookNumber", "凡人修仙转" );
+            }else {
+                item.put("bookIcon", R.drawable.icon_test2);
+                item.put("bookNumber", "流氓高手");
+            }
             item.put("bookName", "name" + i);
             gridItems.add(item);
         }
@@ -52,9 +59,10 @@ public class BookListActivity extends Activity {
      * 初始化 grid View
      */
     private void initGridViewGUI() {
-        adapter = new SimpleAdapter(this, gridItems, R.layout.grid_view_item, new String[]{"bookIcon", "bookNumber"}, new int[]{R.id.ItemImage, R.id.ItemText});
+        adapter = new SimpleAdapter(this, gridItems, R.layout.grid_view_item, new String[]{"bookIcon","bookNumber"}, new int[]{R.id.ItemImage,R.id.ItemText});
 
         mGridView = (GridView) findViewById(R.id.gridView);
+        mGridView.setSelector(new ColorDrawable(Color.LTGRAY));
         mGridView.setAdapter(adapter);
         mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
