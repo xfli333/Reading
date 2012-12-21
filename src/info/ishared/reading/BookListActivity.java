@@ -5,11 +5,17 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.SimpleAdapter;
+import info.ishared.reading.util.PageJumpUtils;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -44,12 +50,12 @@ public class BookListActivity extends Activity {
             Map<String, Object> item = new HashMap<String, Object>();
             if(i%2==0) {
                 item.put("bookIcon", R.drawable.icon_test);
-                item.put("bookNumber", "凡人修仙转" );
+                item.put("bookName", "凡人修仙转" );
             }else {
                 item.put("bookIcon", R.drawable.icon_test2);
-                item.put("bookNumber", "流氓高手");
+                item.put("bookName", "流氓高手");
             }
-            item.put("bookName", "name" + i);
+            item.put("bookNumber", "101010");
             gridItems.add(item);
         }
     }
@@ -68,6 +74,8 @@ public class BookListActivity extends Activity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 bookNumber = (String) gridItems.get(position).get("bookNumber");
+//                testReadFile(bookNumber);
+                PageJumpUtils.jump(BookListActivity.this,ChapterListActivity.class);
             }
         });
         mGridView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
@@ -77,5 +85,19 @@ public class BookListActivity extends Activity {
                 return true;
             }
         });
+    }
+
+
+    private void testReadFile(String name){
+       Map<String ,String> menuMap=new HashMap<String, String>();
+        try {
+            List<String> lines= FileUtils.readLines(new File(AppConfig.BOOK_DIRECTORY + "/" + name + "/list.properties"));
+            for (String line : lines){
+                Log.d(AppConfig.TAG,line);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 }
