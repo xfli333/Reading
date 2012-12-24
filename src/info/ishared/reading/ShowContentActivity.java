@@ -7,6 +7,7 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.widget.TextView;
 import info.ishared.reading.cache.SimplyCache;
+import info.ishared.reading.util.BookUtils;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
@@ -34,14 +35,16 @@ public class ShowContentActivity extends Activity implements GestureDetector.OnG
         Bundle extras = getIntent().getExtras();
 
         bookNumber = extras.getString("bookNumber");
-        fileName = extras.getString("fileName");
+        this.setFileName(extras.getString("fileName"));
 
         mGestureDetector = new GestureDetector(this,this);
         initMenuCache();
         mReadTitle = (TextView) this.findViewById(R.id.read_title);
-        mReadTitle.setText(SimplyCache.menuCache.get(fileName));
+        mReadTitle.setText(SimplyCache.menuCache.get(this.getFileName()));
         mTextView = (TextView) this.findViewById(R.id.html_content);
-        mTextView.setText(Html.fromHtml(getFileContent()));
+
+        mTextView.setText(Html.fromHtml(getFileContent(this.getFileName())));
+
 
     }
 
@@ -59,7 +62,7 @@ public class ShowContentActivity extends Activity implements GestureDetector.OnG
         }
     }
 
-    private String getFileContent() {
+    private String getFileContent(String fileName) {
         try {
             return FileUtils.readFileToString(new File(AppConfig.BOOK_DIRECTORY + "/" + bookNumber + "/" + fileName));
         } catch (IOException e) {
@@ -107,10 +110,20 @@ public class ShowContentActivity extends Activity implements GestureDetector.OnG
     public boolean onFling(MotionEvent motionEvent1, MotionEvent motionEvent2, float v, float v2) {
         boolean isScroll=Math.abs(motionEvent1.getY() - motionEvent2.getY()) < FLING_SCROLL_DISTANCE;
         if (motionEvent1.getX() - motionEvent2.getX() > FLING_MIN_DISTANCE && isScroll ) {
-            // Fling left NExt
+//            this.setFileName(BookUtils.getNextFileName(this.getFileName()));
+//            mReadTitle.setText(SimplyCache.menuCache.get(this.getFileName()));
+//            mTextView.setText(Html.fromHtml(getFileContent(this.getFileName())));
         } else if (motionEvent2.getX() - motionEvent1.getX() > FLING_MIN_DISTANCE  && isScroll ) {
             // Fling right
         }
         return false;
+    }
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
     }
 }
