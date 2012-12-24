@@ -5,13 +5,13 @@ import android.os.Bundle;
 import android.text.Html;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
-import android.widget.ScrollView;
 import android.widget.TextView;
-import info.ishared.reading.util.ToastUtils;
+import info.ishared.reading.cache.SimplyCache;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -21,6 +21,7 @@ import java.io.IOException;
  */
 public class ShowContentActivity extends Activity implements GestureDetector.OnGestureListener {
     private TextView mTextView;
+    private TextView mReadTitle;
     private String fileName;
     private String bookNumber;
     private final int FLING_MIN_DISTANCE = 50;
@@ -36,9 +37,26 @@ public class ShowContentActivity extends Activity implements GestureDetector.OnG
         fileName = extras.getString("fileName");
 
         mGestureDetector = new GestureDetector(this,this);
-
+        initMenuCache();
+        mReadTitle = (TextView) this.findViewById(R.id.read_title);
+        mReadTitle.setText(SimplyCache.menuCache.get(fileName));
         mTextView = (TextView) this.findViewById(R.id.html_content);
         mTextView.setText(Html.fromHtml(getFileContent()));
+
+    }
+
+    private void initMenuCache(){
+        if(SimplyCache.menuCache.isEmpty()){
+            String chapterNumber=fileName.substring(0,fileName.indexOf("/"));
+            try {
+               List<String> lines = FileUtils.readLines(new File(AppConfig.BOOK_DIRECTORY + "/" + bookNumber + "/" + chapterNumber + "/menu.txt"));
+                for (String line : lines) {
+                    SimplyCache.menuCache.put(line.split("=")[0], line.split("=")[1]);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     private String getFileContent() {

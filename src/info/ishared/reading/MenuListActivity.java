@@ -6,12 +6,11 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import info.ishared.reading.bean.ReadHistory;
+import info.ishared.reading.cache.SimplyCache;
 import info.ishared.reading.db.ReadHistoryOperator;
-import info.ishared.reading.util.ToastUtils;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
@@ -82,6 +81,7 @@ public class MenuListActivity extends Activity {
     }
 
     private void initListViewData() {
+        SimplyCache.menuCache.clear();
         List<String> lines = null;
         try {
             lines = FileUtils.readLines(new File(AppConfig.BOOK_DIRECTORY + "/" + bookNumber + "/" + chapterNumber + "/menu.txt"));
@@ -89,6 +89,7 @@ public class MenuListActivity extends Activity {
                 Map<String, String> map = new HashMap<String, String>(2);
                 map.put("fileName", line.split("=")[0]);
                 map.put("displayTitle", line.split("=")[1]);
+                SimplyCache.menuCache.put(line.split("=")[0],line.split("=")[1]);
                 menuData.add(map);
             }
         } catch (IOException e) {
