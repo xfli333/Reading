@@ -106,17 +106,4 @@ public class BookListActivity extends Activity {
         });
     }
 
-
-    private void testReadFile(String name){
-       Map<String ,String> menuMap=new HashMap<String, String>();
-        try {
-            List<String> lines= FileUtils.readLines(new File(AppConfig.BOOK_DIRECTORY + "/" + name + "/list.properties"));
-            for (String line : lines){
-                Log.d(AppConfig.TAG,line);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-    }
 }

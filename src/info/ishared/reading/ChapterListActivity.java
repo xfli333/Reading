@@ -9,6 +9,9 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import info.ishared.reading.bean.ReadHistory;
+import info.ishared.reading.db.ReadHistoryOperator;
+import info.ishared.reading.util.AlertDialogUtils;
 import info.ishared.reading.util.PageJumpUtils;
 import info.ishared.reading.util.ToastUtils;
 
@@ -29,10 +32,12 @@ public class ChapterListActivity extends Activity {
     private String bookNumber;
     private String chapterSize;
     private List<Map<String,String>> menuData=new ArrayList<Map<String,String>>();
+    private ReadHistoryOperator mReadHistoryOperator;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.chapter_list);
+        mReadHistoryOperator = new ReadHistoryOperator(this);
         Bundle extras = getIntent().getExtras();
 
         bookNumber = extras.getString("bookNumber");
@@ -40,6 +45,8 @@ public class ChapterListActivity extends Activity {
         mListView = (ListView) this.findViewById(R.id.chapter_list_view);
         initListViewData();
         initListViewGUI();
+        queryReadHistory(bookNumber);
+
     }
 
     private void initListViewGUI() {
@@ -48,9 +55,12 @@ public class ChapterListActivity extends Activity {
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+
+
+
                 Intent intent = new Intent(ChapterListActivity.this, MenuListActivity.class);
                 intent.putExtra("bookNumber", bookNumber);
-                intent.putExtra("chapterNumber",  menuData.get(position).get("index"));
+                intent.putExtra("chapterNumber", menuData.get(position).get("index"));
                 ChapterListActivity.this.startActivity(intent);
             }
         });
@@ -62,6 +72,21 @@ public class ChapterListActivity extends Activity {
             map.put("index",i+"");
             map.put("title","第"+(i+1)+"部分");
             menuData.add(map);
+        }
+    }
+
+    private void queryReadHistory(final String bookNumber){
+        final ReadHistory readHistory = this.mReadHistoryOperator.queryByBookNumber(bookNumber);
+        if(readHistory !=null){
+            AlertDialogUtils.showYesNoDiaLog(ChapterListActivity.this,"是否继续上次的阅读?",new AlertDialogUtils.Executor() {
+                @Override
+                public void execute() {
+                    Intent intent = new Intent(ChapterListActivity.this, ShowContentActivity.class);
+                    intent.putExtra("bookNumber", bookNumber);
+                    intent.putExtra("fileName",readHistory.getReadLocation());
+                    ChapterListActivity.this.startActivity(intent);
+                }
+            });
         }
     }
 }

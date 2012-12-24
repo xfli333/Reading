@@ -65,12 +65,14 @@ public class DBHelper {
         @Override
         public void onCreate(SQLiteDatabase db) {
             db.execSQL(DBConfig.Book.CREATE_BOOK_SQL);
+            db.execSQL(DBConfig.ReadHistory.CREATE_READ_HISTORY_SQL);
         }
 
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
             Log.w(TAG, "Upgrading database from version " + oldVersion + " to " + newVersion + ", which will destroy all old data");
             db.execSQL("DROP TABLE IF EXISTS " + DBConfig.Book.TABLE_NAME);
+            db.execSQL("DROP TABLE IF EXISTS " + DBConfig.ReadHistory.TABLE_NAME);
             onCreate(db);
         }
 

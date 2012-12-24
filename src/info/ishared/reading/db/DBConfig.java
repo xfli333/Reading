@@ -30,5 +30,20 @@ public class DBConfig {
                 + ");";
     }
 
+    public static class ReadHistory {
+        public static final String TABLE_NAME = "read_history";
+
+        public static final String ID = "id";
+        public static final String BOOK_NUMBER = "book_number";
+        public static final String READ_LOCATION = "read_location";
+
+        public static final String CREATE_READ_HISTORY_SQL = "create table " + TABLE_NAME
+                + "("
+                + ID + " integer primary key autoincrement, "
+                + BOOK_NUMBER + " TEXT, "
+                + READ_LOCATION + " TEXT "
+                + ");";
+    }
+
 
 }
