@@ -18,13 +18,15 @@ public class DBConfig {
         public static final String BOOK_NUMBER = "book_number";
         public static final String BOOK_NAME = "book_name";
         public static final String BOOK_SIZE = "book_size";
+        public static final String CHAPTER_SIZE = "chapter_size";
 
         public static final String CREATE_BOOK_SQL = "create table " + TABLE_NAME
                 + "("
                 + ID + " integer primary key autoincrement, "
                 + BOOK_NUMBER + " TEXT, "
                 + BOOK_NAME + " TEXT, "
-                + BOOK_SIZE + "TEXT "
+                + BOOK_SIZE + " TEXT, "
+                + CHAPTER_SIZE + " integer "
                 + ");";
     }
 

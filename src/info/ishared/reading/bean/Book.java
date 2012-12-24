@@ -13,6 +13,7 @@ public class Book implements Serializable {
     private String bookNumber;
     private String bookName;
     private String bookSize;
+    private Integer chapterSize;
 
     public Long getId() {
         return id;
@@ -44,5 +45,13 @@ public class Book implements Serializable {
 
     public void setBookSize(String bookSize) {
         this.bookSize = bookSize;
+    }
+
+    public Integer getChapterSize() {
+        return chapterSize;
+    }
+
+    public void setChapterSize(Integer chapterSize) {
+        this.chapterSize = chapterSize;
     }
 }
