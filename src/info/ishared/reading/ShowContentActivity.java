@@ -36,7 +36,7 @@ public class ShowContentActivity extends Activity {
     private List<View> mListViews;
     private LayoutInflater mInflater;
 
-    private View view1,view2,view3;
+    private View view1, view2, view3;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,31 +61,30 @@ public class ShowContentActivity extends Activity {
 
         mListViews = new ArrayList<View>();
 
-         view1=mInflater.inflate(R.layout.show_content, null);
-        ((TextView)view1.findViewById(R.id.html_content)).setText(Html.fromHtml(getFileContent(this.getFileName())));
+        view1 = mInflater.inflate(R.layout.show_content, null);
+        ((TextView) view1.findViewById(R.id.html_content)).setText(Html.fromHtml(getFileContent(this.getFileName())));
+        ((TextView) view1.findViewById(R.id.read_title)).setText(SimplyCache.menuCache.get(this.getFileName()));
         mListViews.add(view1);
 
-         view2=mInflater.inflate(R.layout.show_content, null);
-//        ((TextView)view2.findViewById(R.id.html_content)).setText(Html.fromHtml(getFileContent(this.getFileName())));
+        view2 = mInflater.inflate(R.layout.show_content, null);
         mListViews.add(view2);
 
-         view3=mInflater.inflate(R.layout.show_content, null);
-//        ((TextView)view3.findViewById(R.id.html_content)).setText(Html.fromHtml(getFileContent(this.getFileName())));
+        view3 = mInflater.inflate(R.layout.show_content, null);
         mListViews.add(view3);
 
-//        mListViews.add(mInflater.inflate(R.layout.show_content, null));
-//        mListViews.add(mInflater.inflate(R.layout.show_content, null));
+        mListViews.add(mInflater.inflate(R.layout.show_content, null));
+        mListViews.add(mInflater.inflate(R.layout.show_content, null));
 
         //初始化当前显示的view
         mViewPager.setCurrentItem(0);
 
     }
 
-    private void initMenuCache(){
-        if(SimplyCache.menuCache.isEmpty()){
-            String chapterNumber=fileName.substring(0,fileName.indexOf("/"));
+    private void initMenuCache() {
+        if (SimplyCache.menuCache.isEmpty()) {
+            String chapterNumber = fileName.substring(0, fileName.indexOf("/"));
             try {
-               List<String> lines = FileUtils.readLines(new File(AppConfig.BOOK_DIRECTORY + "/" + bookNumber + "/" + chapterNumber + "/menu.txt"));
+                List<String> lines = FileUtils.readLines(new File(AppConfig.BOOK_DIRECTORY + "/" + bookNumber + "/" + chapterNumber + "/menu.txt"));
                 for (String line : lines) {
                     SimplyCache.menuCache.put(line.split("=")[0], line.split("=")[1]);
                 }
@@ -113,12 +112,19 @@ public class ShowContentActivity extends Activity {
     }
 
 
-    public class MyPagerAdapter  extends PagerAdapter {
-
+    public class MyPagerAdapter extends PagerAdapter {
+        int mCount=3;
         @Override
-        public void destroyItem(View arg0, int arg1, Object arg2) {
-            Log.d("k", "destroyItem");
-//            ((ViewPager) arg0).removeView(mListViews.get(arg1));
+        public void destroyItem(View arg0, int position, Object arg2) {
+            if (position >= mListViews.size()) {
+                int newPosition = position%mListViews.size();
+                position = newPosition;
+       ((ViewPager) arg0).removeView(mListViews.get(position));
+            }
+            if(position <0){
+                position = -position;
+    ((ViewPager) arg0).removeView(mListViews.get(position));
+            }
         }
 
         @Override
@@ -134,22 +140,29 @@ public class ShowContentActivity extends Activity {
         }
 
         @Override
-        public Object instantiateItem(View arg0, int arg1) {
-            Log.d("instantiateItem", "==="+arg1);
-            if(arg1 >2){
-                ((ViewPager) arg0).addView(mListViews.get(arg1%3),0);
-                return mListViews.get(arg1%3);
-            }else{
-                ((ViewPager) arg0).addView(mListViews.get(arg1),0);
-                return mListViews.get(arg1);
-            }
+        public Object instantiateItem(View arg0, int position) {
+            Log.d("instantiateItem", "===" + position);
+            if (position >= mListViews.size()) {
+                int newPosition = position%mListViews.size();
 
+                position = newPosition;
+                mCount++;
+            }
+            if(position <0){
+                position = -position;
+                mCount--;
+            }
+            try {
+                ((ViewPager) arg0).addView(mListViews.get(position), 0);
+            } catch (Exception e) {
+            }
+            return mListViews.get(position);
         }
 
         @Override
         public boolean isViewFromObject(View arg0, Object arg1) {
-            Log.d("k", "isViewFromObject "+ (arg0==(arg1)));
-            return arg0==(arg1);
+            Log.d("k", "isViewFromObject " + (arg0 == (arg1)));
+            return arg0 == (arg1);
         }
 
         @Override
