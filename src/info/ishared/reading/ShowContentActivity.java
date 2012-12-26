@@ -2,16 +2,21 @@ package info.ishared.reading;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.Parcelable;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.text.Html;
-import android.view.GestureDetector;
-import android.view.MotionEvent;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 import info.ishared.reading.cache.SimplyCache;
-import info.ishared.reading.util.BookUtils;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -20,31 +25,59 @@ import java.util.List;
  * Date: 12-12-21
  * Time: 下午10:40
  */
-public class ShowContentActivity extends Activity implements GestureDetector.OnGestureListener {
+public class ShowContentActivity extends Activity {
     private TextView mTextView;
     private TextView mReadTitle;
     private String fileName;
     private String bookNumber;
-    private final int FLING_MIN_DISTANCE = 50;
-    private final int FLING_SCROLL_DISTANCE = 60;
-    private GestureDetector mGestureDetector;
+
+    private MyPagerAdapter mAdapter;
+    private ViewPager mViewPager;
+    private List<View> mListViews;
+    private LayoutInflater mInflater;
+
+    private View view1,view2,view3;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.setContentView(R.layout.show_content);
+        this.setContentView(R.layout.content_container);
+        mInflater = getLayoutInflater();
         Bundle extras = getIntent().getExtras();
 
         bookNumber = extras.getString("bookNumber");
         this.setFileName(extras.getString("fileName"));
 
-        mGestureDetector = new GestureDetector(this,this);
         initMenuCache();
-        mReadTitle = (TextView) this.findViewById(R.id.read_title);
-        mReadTitle.setText(SimplyCache.menuCache.get(this.getFileName()));
-        mTextView = (TextView) this.findViewById(R.id.html_content);
 
-        mTextView.setText(Html.fromHtml(getFileContent(this.getFileName())));
+//        mReadTitle = (TextView) (mInflater.inflate(R.layout.show_content, null).findViewById(R.id.read_title));
+//        mReadTitle.setText(SimplyCache.menuCache.get(this.getFileName()));
+//        mTextView = (TextView)( mInflater.inflate(R.layout.show_content, null).findViewById(R.id.html_content));
+//        mTextView.setText(Html.fromHtml(getFileContent(this.getFileName())));
 
+
+        mAdapter = new MyPagerAdapter();
+        mViewPager = (ViewPager) findViewById(R.id.view_pager_layout);
+        mViewPager.setAdapter(mAdapter);
+
+        mListViews = new ArrayList<View>();
+
+         view1=mInflater.inflate(R.layout.show_content, null);
+        ((TextView)view1.findViewById(R.id.html_content)).setText(Html.fromHtml(getFileContent(this.getFileName())));
+        mListViews.add(view1);
+
+         view2=mInflater.inflate(R.layout.show_content, null);
+//        ((TextView)view2.findViewById(R.id.html_content)).setText(Html.fromHtml(getFileContent(this.getFileName())));
+        mListViews.add(view2);
+
+         view3=mInflater.inflate(R.layout.show_content, null);
+//        ((TextView)view3.findViewById(R.id.html_content)).setText(Html.fromHtml(getFileContent(this.getFileName())));
+        mListViews.add(view3);
+
+//        mListViews.add(mInflater.inflate(R.layout.show_content, null));
+//        mListViews.add(mInflater.inflate(R.layout.show_content, null));
+
+        //初始化当前显示的view
+        mViewPager.setCurrentItem(0);
 
     }
 
@@ -71,59 +104,70 @@ public class ShowContentActivity extends Activity implements GestureDetector.OnG
         return "";
     }
 
-    @Override
-    public boolean dispatchTouchEvent(MotionEvent motionEvent) {
-        mGestureDetector.onTouchEvent(motionEvent);
-        return super.dispatchTouchEvent(motionEvent);
-    }
-
-//    @Override
-//    public boolean onTouch(View view, MotionEvent motionEvent) {
-//        mGestureDetector.onTouchEvent(motionEvent);
-//        return true;
-//    }
-
-    @Override
-    public boolean onDown(MotionEvent motionEvent) {
-        return false;
-    }
-
-    @Override
-    public void onShowPress(MotionEvent motionEvent) {
-    }
-
-    @Override
-    public boolean onSingleTapUp(MotionEvent motionEvent) {
-        return false;
-    }
-
-    @Override
-    public boolean onScroll(MotionEvent motionEvent, MotionEvent motionEvent2, float v, float v2) {
-        return false;
-    }
-
-    @Override
-    public void onLongPress(MotionEvent motionEvent) {
-    }
-
-    @Override
-    public boolean onFling(MotionEvent motionEvent1, MotionEvent motionEvent2, float v, float v2) {
-        boolean isScroll=Math.abs(motionEvent1.getY() - motionEvent2.getY()) < FLING_SCROLL_DISTANCE;
-        if (motionEvent1.getX() - motionEvent2.getX() > FLING_MIN_DISTANCE && isScroll ) {
-//            this.setFileName(BookUtils.getNextFileName(this.getFileName()));
-//            mReadTitle.setText(SimplyCache.menuCache.get(this.getFileName()));
-//            mTextView.setText(Html.fromHtml(getFileContent(this.getFileName())));
-        } else if (motionEvent2.getX() - motionEvent1.getX() > FLING_MIN_DISTANCE  && isScroll ) {
-            // Fling right
-        }
-        return false;
-    }
-
     public String getFileName() {
         return fileName;
     }
 
     public void setFileName(String fileName) {
         this.fileName = fileName;
+    }
+
+
+    public class MyPagerAdapter  extends PagerAdapter {
+
+        @Override
+        public void destroyItem(View arg0, int arg1, Object arg2) {
+            Log.d("k", "destroyItem");
+//            ((ViewPager) arg0).removeView(mListViews.get(arg1));
+        }
+
+        @Override
+        public void finishUpdate(View arg0) {
+            Log.d("k", "finishUpdate");
+        }
+
+        @Override
+        public int getCount() {
+//            Log.d("k", "getCount");
+//            return mListViews.size();
+            return 100;
+        }
+
+        @Override
+        public Object instantiateItem(View arg0, int arg1) {
+            Log.d("instantiateItem", "==="+arg1);
+            if(arg1 >2){
+                ((ViewPager) arg0).addView(mListViews.get(arg1%3),0);
+                return mListViews.get(arg1%3);
+            }else{
+                ((ViewPager) arg0).addView(mListViews.get(arg1),0);
+                return mListViews.get(arg1);
+            }
+
+        }
+
+        @Override
+        public boolean isViewFromObject(View arg0, Object arg1) {
+            Log.d("k", "isViewFromObject "+ (arg0==(arg1)));
+            return arg0==(arg1);
+        }
+
+        @Override
+        public void restoreState(Parcelable arg0, ClassLoader arg1) {
+            Log.d("k", "restoreState");
+        }
+
+        @Override
+        public Parcelable saveState() {
+            Log.d("k", "saveState");
+            return null;
+        }
+
+        @Override
+        public void startUpdate(View arg0) {
+            Log.d("k", "startUpdate");
+        }
+
+
     }
 }
