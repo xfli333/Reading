@@ -2,6 +2,7 @@ package info.ishared.reading;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Parcelable;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -12,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import info.ishared.reading.cache.SimplyCache;
+import info.ishared.reading.util.BookUtils;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
@@ -36,6 +38,8 @@ public class ShowContentActivity extends Activity {
     private List<View> mListViews;
     private LayoutInflater mInflater;
 
+    private Handler mHandler;
+
     private View view1, view2, view3;
 
     public void onCreate(Bundle savedInstanceState) {
@@ -43,7 +47,7 @@ public class ShowContentActivity extends Activity {
         this.setContentView(R.layout.content_container);
         mInflater = getLayoutInflater();
         Bundle extras = getIntent().getExtras();
-
+        mHandler = new Handler();
         bookNumber = extras.getString("bookNumber");
         this.setFileName(extras.getString("fileName"));
 
@@ -72,8 +76,6 @@ public class ShowContentActivity extends Activity {
         view3 = mInflater.inflate(R.layout.show_content, null);
         mListViews.add(view3);
 
-        mListViews.add(mInflater.inflate(R.layout.show_content, null));
-        mListViews.add(mInflater.inflate(R.layout.show_content, null));
 
         //初始化当前显示的view
         mViewPager.setCurrentItem(0);
@@ -113,18 +115,18 @@ public class ShowContentActivity extends Activity {
 
 
     public class MyPagerAdapter extends PagerAdapter {
-        int mCount=3;
+
         @Override
         public void destroyItem(View arg0, int position, Object arg2) {
-            if (position >= mListViews.size()) {
-                int newPosition = position%mListViews.size();
-                position = newPosition;
-       ((ViewPager) arg0).removeView(mListViews.get(position));
-            }
-            if(position <0){
-                position = -position;
-    ((ViewPager) arg0).removeView(mListViews.get(position));
-            }
+//            if (position >= mListViews.size()) {
+//                int newPosition = position % mListViews.size();
+//                position = newPosition;
+//                ((ViewPager) arg0).removeView(mListViews.get(position));
+//            }
+//            if (position < 0) {
+//                position = -position;
+//                ((ViewPager) arg0).removeView(mListViews.get(position));
+//            }
         }
 
         @Override
@@ -143,19 +145,31 @@ public class ShowContentActivity extends Activity {
         public Object instantiateItem(View arg0, int position) {
             Log.d("instantiateItem", "===" + position);
             if (position >= mListViews.size()) {
-                int newPosition = position%mListViews.size();
+                int newPosition = position % mListViews.size();
 
                 position = newPosition;
-                mCount++;
             }
-            if(position <0){
+            if (position < 0) {
                 position = -position;
-                mCount--;
             }
             try {
-                ((ViewPager) arg0).addView(mListViews.get(position), 0);
+                final View currentView = mListViews.get(position);
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        Log.d("instantiateItem", "file name" + fileName);
+                        Log.d("instantiateItem", "next file name" + BookUtils.getNextFileName(fileName));
+                        String nextFileName = BookUtils.getNextFileName(fileName);
+                        ((TextView) currentView.findViewById(R.id.html_content)).setText(Html.fromHtml(getFileContent(nextFileName)));
+                        ((TextView) currentView.findViewById(R.id.read_title)).setText(SimplyCache.menuCache.get(nextFileName));
+                        setFileName(nextFileName);
+                    }
+                });
+                ((ViewPager) arg0).addView(currentView, 0);
+
             } catch (Exception e) {
             }
+            Log.d("instantiateItem", "= xxx==" + position);
             return mListViews.get(position);
         }
 
