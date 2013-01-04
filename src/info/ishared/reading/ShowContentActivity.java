@@ -152,7 +152,7 @@ public class ShowContentActivity extends Activity {
 
                 ((ViewPager) arg0).addView(currentView, 0);
 
-                String nextFileName = BookUtils.getNextFileName(getFileName());
+                String nextFileName = BookUtils.getNextFileName(bookNumber,getFileName());
                 setFileName(nextFileName);
 
 //                mHandler.post(new Runnable() {

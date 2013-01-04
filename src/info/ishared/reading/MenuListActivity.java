@@ -69,7 +69,7 @@ public class MenuListActivity extends Activity {
                     }
                 });
 
-                Intent intent = new Intent(MenuListActivity.this, ShowContentActivity.class);
+                Intent intent = new Intent(MenuListActivity.this, FirstPageActivity.class);
                 intent.putExtra("bookNumber", bookNumber);
                 intent.putExtra("fileName", menuData.get(position).get("fileName"));
                 MenuListActivity.this.startActivity(intent);

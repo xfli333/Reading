@@ -10,5 +10,7 @@ import java.util.Map;
  * Time: PM4:56
  */
 public class SimplyCache {
-    public static Map<String,String> menuCache=new HashMap<String, String>();
+    public static Map<String, String> menuCache = new HashMap<String, String>();
+    public static Map<String, Integer> chapterSizeCache = new HashMap<String, Integer>();
+
 }

@@ -76,14 +76,16 @@ public class ChapterListActivity extends Activity {
     }
 
     private void queryReadHistory(final String bookNumber){
-        final ReadHistory readHistory = this.mReadHistoryOperator.queryByBookNumber(bookNumber);
+        ReadHistory readHistory = this.mReadHistoryOperator.queryByBookNumber(bookNumber);
+
         if(readHistory !=null){
+            final String fileName=readHistory.getReadLocation();
             AlertDialogUtils.showYesNoDiaLog(ChapterListActivity.this,"是否继续上次的阅读?",new AlertDialogUtils.Executor() {
                 @Override
                 public void execute() {
-                    Intent intent = new Intent(ChapterListActivity.this, ShowContentActivity.class);
+                    Intent intent = new Intent(ChapterListActivity.this, FirstPageActivity.class);
                     intent.putExtra("bookNumber", bookNumber);
-                    intent.putExtra("fileName",readHistory.getReadLocation());
+                    intent.putExtra("fileName",fileName);
                     ChapterListActivity.this.startActivity(intent);
                 }
             });

@@ -1,8 +1,11 @@
 package info.ishared.reading.util;
 
 import info.ishared.reading.AppConfig;
+import info.ishared.reading.cache.SimplyCache;
+import org.apache.commons.io.FileUtils;
 
 import java.io.File;
+import java.io.IOException;
 
 /**
  * Created with IntelliJ IDEA.
@@ -12,18 +15,34 @@ import java.io.File;
  */
 public class BookUtils {
 
-    public static String getNextFileName(String fileName) {
-        return getNextFileName(fileName, false);
+    public static final String NONE = "NONE";
+
+    public static String getNextFileName(String bookNumber,String fileName) {
+        Integer chapterNumber = Integer.valueOf(fileName.split("/")[0]);
+        Integer fileNameNumber = Integer.valueOf(fileName.split("/")[1].split(".txt")[0]);
+        int nextNumber = fileNameNumber + 1;
+        int chapterCount = 0;
+        if (!SimplyCache.chapterSizeCache.isEmpty()) {
+            chapterCount = SimplyCache.chapterSizeCache.get(getChapterByFileName(fileName));
+        }
+        if (chapterCount == 0) {
+            chapterCount = getPageSize(AppConfig.BOOK_DIRECTORY + "/" + bookNumber + "/"+getChapterByFileName(fileName));
+        }
+        if (nextNumber >= chapterCount) {
+            return NONE;
+        }
+        return chapterNumber + "/" + (fileNameNumber + 1) + ".txt";
+
     }
 
-    public static String getNextFileName(String fileName, boolean nextChapter) {
+    public static String getLastFileName(String bookNumber,String fileName) {
         Integer chapterNumber = Integer.valueOf(fileName.split("/")[0]);
-        if (nextChapter) {
-            return (chapterNumber + 1) + "/0.txt";
-        } else {
-            Integer fileNameNumber = Integer.valueOf(fileName.split("/")[1].split(".txt")[0]);
-            return chapterNumber + "/" + (fileNameNumber + 1) + ".txt";
+        Integer fileNameNumber = Integer.valueOf(fileName.split("/")[1].split(".txt")[0]);
+        int lastNumber = fileNameNumber - 1;
+        if (lastNumber < 0) {
+            return NONE;
         }
+        return chapterNumber + "/" + (fileNameNumber - 1) + ".txt";
     }
 
     public static boolean nextChapterExists(String bookNumber, String fileName) {
@@ -49,5 +68,15 @@ public class BookUtils {
 
     public static String getChapterByFileName(String fileName) {
         return fileName.substring(0, fileName.indexOf("/"));
+    }
+
+
+    public static String getFileContent(String bookNumber,String fileName){
+        try {
+            return FileUtils.readFileToString(new File(AppConfig.BOOK_DIRECTORY + "/" + bookNumber + "/" + fileName));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "";
     }
 }

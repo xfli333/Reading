@@ -14,7 +14,9 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.SimpleAdapter;
 import info.ishared.reading.bean.Book;
+import info.ishared.reading.cache.SimplyCache;
 import info.ishared.reading.db.BookOperator;
+import info.ishared.reading.util.CacheUtils;
 import info.ishared.reading.util.PageJumpUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -91,10 +93,14 @@ public class BookListActivity extends Activity {
                 bookNumber = (String) gridItems.get(position).get("bookNumber");
                 chapterSize = gridItems.get(position).get("chapterSize").toString();
 //                testReadFile(bookNumber);
+
+                CacheUtils.clearCache();
+
                 Intent intent = new Intent(BookListActivity.this, ChapterListActivity.class);
                 intent.putExtra("bookNumber", bookNumber);
                 intent.putExtra("chapterSize", chapterSize);
                 BookListActivity.this.startActivity(intent);
+                overridePendingTransition(R.anim.push_left_in,R.anim.push_left_out);
             }
         });
         mGridView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
