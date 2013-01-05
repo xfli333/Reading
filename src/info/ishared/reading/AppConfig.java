@@ -15,4 +15,6 @@ public class AppConfig {
     public static final String DATA_DIRECTORY=SD_PATH+"reading_data";
     public static final String ZIP_DIRECTORY=DATA_DIRECTORY+"/zip";
     public static final String BOOK_DIRECTORY=DATA_DIRECTORY+"/book";
+
+    public static final String SERVER_URL="http://www.oschina.net/";
 }

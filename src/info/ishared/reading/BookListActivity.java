@@ -7,6 +7,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -15,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.SimpleAdapter;
 import info.ishared.reading.bean.Book;
 import info.ishared.reading.cache.SimplyCache;
+import info.ishared.reading.controller.BookListController;
 import info.ishared.reading.db.BookOperator;
 import info.ishared.reading.util.CacheUtils;
 import info.ishared.reading.util.PageJumpUtils;
@@ -40,21 +42,23 @@ public class BookListActivity extends Activity {
     private String bookNumber;
     private String chapterSize;
     private SimpleAdapter adapter;
-    private BookOperator bookOperator;
+    private BookListController mController;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        bookOperator=new BookOperator(this);
+        mController=new BookListController(this);
         setContentView(R.layout.main);
         mGridView = (GridView)this.findViewById(R.id.gridView);
         initGridViewData();
         initGridViewGUI();
+//        mController.checkVersion();
 
     }
 
     private void initGridViewData() {
-        List<Book> bookList=bookOperator.listAllBooks();
+        List<Book> bookList=mController.queryLocalBooks();
         for(Book book : bookList){
             Map<String, Object> item = new HashMap<String, Object>();
             item.put("bookIcon", (AppConfig.BOOK_DIRECTORY + "/"+book.getBookNumber()+"/icon.png"));

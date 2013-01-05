@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.view.Gravity;
 import android.widget.Toast;
 import info.ishared.reading.bean.Book;
+import info.ishared.reading.controller.AppLauncherController;
 import info.ishared.reading.db.BookOperator;
 import info.ishared.reading.util.PageJumpUtils;
 
@@ -17,14 +18,14 @@ public class AppLauncherActivity extends Activity {
      * Called when the activity is first created.
      */
 
-
+    private AppLauncherController mController;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         showLoading();
-        checkDataDirectory();
+        mController = new AppLauncherController(this);
+        mController.checkAndCreateDataDirectory();
 //        insertTestData();
         new Handler().postDelayed(new Runnable() {
             public void run() {
@@ -42,20 +43,6 @@ public class AppLauncherActivity extends Activity {
         toast.show();
     }
 
-    private void checkDataDirectory() {
-        File sd = Environment.getExternalStorageDirectory();
-        String path = sd.getPath() + "/" + AppConfig.DATA_DIRECTORY;
-        File file = new File(path);
-        if (!file.exists()) file.mkdir();
-
-        String zipPath = sd.getPath() + "/" + AppConfig.DATA_DIRECTORY+"/"+AppConfig.ZIP_DIRECTORY;
-        File zipDir = new File(zipPath);
-        if (!zipDir.exists()) zipDir.mkdir();
-
-        String bookPath = sd.getPath() + "/" + AppConfig.DATA_DIRECTORY+"/"+AppConfig.BOOK_DIRECTORY;
-        File bookDir = new File(bookPath);
-        if (!bookDir.exists()) bookDir.mkdir();
-    }
 
     private void insertTestData(){
         Book book=new Book();
