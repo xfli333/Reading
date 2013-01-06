@@ -6,22 +6,16 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.SimpleAdapter;
 import info.ishared.reading.bean.Book;
-import info.ishared.reading.cache.SimplyCache;
 import info.ishared.reading.controller.BookListController;
-import info.ishared.reading.db.BookOperator;
 import info.ishared.reading.util.CacheUtils;
-import info.ishared.reading.util.PageJumpUtils;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
+import info.ishared.reading.util.ZipUtils;
+import org.apache.commons.compress.archivers.zip.ZipUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -55,6 +49,11 @@ public class BookListActivity extends Activity {
         initGridViewGUI();
 //        mController.checkVersion();
 
+//        try {
+//            ZipUtils.unzip(AppConfig.ZIP_DIRECTORY + "/101011.zip", AppConfig.BOOK_DIRECTORY + "/");
+//        } catch (IOException e) {
+//            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+//        }
     }
 
     private void initGridViewData() {

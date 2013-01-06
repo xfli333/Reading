@@ -46,10 +46,10 @@ public class AppLauncherActivity extends Activity {
 
     private void insertTestData(){
         Book book=new Book();
-        book.setBookNumber("101010");
-        book.setBookName("凡人修仙传");
-        book.setChapterSize(23);
-        book.setBookSize("20M");
+        book.setBookNumber("liumang1");
+        book.setBookName("流氓高手");
+        book.setChapterSize(8);
+        book.setBookSize("4.7M");
         BookOperator bookOperator=new BookOperator(this);
         bookOperator.createBook(book);
     }

@@ -20,6 +20,7 @@
         <activity android:name=".ShowContentActivity"/>
         <activity android:name=".FirstPageActivity"/>
         <activity android:name=".SecondPageActivity"/>
+        <activity android:name=".DownloadBookActivity"/>
     </application>
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
