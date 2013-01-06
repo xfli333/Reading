@@ -128,15 +128,22 @@ public class DownloadBookActivity extends Activity {
     private void initGridViewGUI() {
         adapter = new SimpleAdapter(this, gridItems, R.layout.download_list_item, new String[]{"ItemImage", "ItemText", "ItemText2"}, new int[]{R.id.item_image, R.id.item_text, R.id.item_text2}){
             @Override
-            public View getView(int position, View convertView, ViewGroup parent) {
-                Log.d(AppConfig.TAG+"-------","uuuuu"+convertView.toString());
-                if(convertView instanceof ImageView){
-                    Log.d(AppConfig.TAG+"-------","uuuuu");
-                    new LoadNetworkImageTask((ImageView)convertView,adapter).execute(gridItems.get(position).get("ItemImageUrl").toString());
-                    return convertView;
-                }else{
-                    return super.getView(position, convertView, parent);
-                }
+            public View getView(final int position, View convertView, ViewGroup parent) {
+                View view = super.getView(position, convertView, parent);
+                final ImageView imageView = (ImageView)view.findViewById(R.id.item_image);
+                imageView.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            imageView.setImageDrawable(Drawable.createFromStream(new URL(gridItems.get(position).get("ItemImageUrl").toString()).openStream(), "src"));
+                        } catch (IOException e) {
+                            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                        }
+                    }
+                });
+
+//                 new LoadNetworkImageTask(imageView,adapter).execute(gridItems.get(position).get("ItemImageUrl").toString());
+                return view;
             }
         };
 //        adapter.setViewBinder(new SimpleAdapter.ViewBinder() {
