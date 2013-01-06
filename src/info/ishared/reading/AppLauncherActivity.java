@@ -29,7 +29,7 @@ public class AppLauncherActivity extends Activity {
 //        insertTestData();
         new Handler().postDelayed(new Runnable() {
             public void run() {
-                PageJumpUtils.jump(AppLauncherActivity.this, BookListActivity.class);
+                PageJumpUtils.jump(AppLauncherActivity.this, DownloadBookActivity.class);
                 AppLauncherActivity.this.finish();
             }
         }, 2000);
