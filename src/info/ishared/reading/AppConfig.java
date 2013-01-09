@@ -16,5 +16,7 @@ public class AppConfig {
     public static final String ZIP_DIRECTORY=DATA_DIRECTORY+"/zip";
     public static final String BOOK_DIRECTORY=DATA_DIRECTORY+"/book";
 
-    public static final String SERVER_URL="http://www.oschina.net/";
+    public static final String SERVER_URL="http://172.17.22.234:8080/Reading-Server";
+    public static final String LIST_BOOKS_URL=SERVER_URL+"/book/listBookAsJson";
+
 }

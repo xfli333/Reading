@@ -29,7 +29,7 @@ public abstract class AbstractHttpController<T extends Serializable> {
     private Handler mGuiHandler;
     private HttpConnection mHttpConnection;
 
-    ExecutorService executorService = Executors.newFixedThreadPool(5);
+    ExecutorService executorService;
 
     public AbstractHttpController(Class<? extends T> clazz) {
         this.clazz = clazz;
@@ -42,6 +42,7 @@ public abstract class AbstractHttpController<T extends Serializable> {
     /**
      */
     protected void sendPostRequest(final String url, final Map<String, String> paramValue,HttpEventListener<T> httpEventListener) {
+        executorService = Executors.newFixedThreadPool(2);
         mHttpConnection = new HttpConnection();
         mGuiHandler = new HttpHandler<T>(httpEventListener);
         executorService.execute(new Runnable() {
@@ -65,6 +66,7 @@ public abstract class AbstractHttpController<T extends Serializable> {
     }
 
     protected void sendGetRequest(final String url, final String encoder, HttpEventListener<T> httpEventListener) {
+        executorService = Executors.newFixedThreadPool(2);
         mHttpConnection = new HttpConnection();
         mGuiHandler = new HttpHandler<T>(httpEventListener);
         executorService.execute(new Runnable() {

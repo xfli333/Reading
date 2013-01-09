@@ -7,10 +7,12 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import info.ishared.reading.asyn.LoadNetworkImageTask;
+import info.ishared.reading.controller.DownloadController;
 
 import java.io.IOException;
 import java.net.URL;
@@ -32,9 +34,12 @@ public class DownloadBookActivity extends Activity {
     private Handler mHandler;
     private SimpleAdapter adapter;
 
+    private DownloadController mController;
+
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.download_book_list);
+        mController = new DownloadController(this);
 
         initGridViewData();
         initGridViewGUI();
@@ -161,6 +166,13 @@ public class DownloadBookActivity extends Activity {
 //        });
         mGridView = (ListView) findViewById(R.id.download_book);
         mGridView.setAdapter(adapter);
-//        mGridView.setOnItemClickListener(new GridListViewClickedListener());
+        mGridView.setOnItemClickListener(new BookListViewClickedListener());
+    }
+
+    private class BookListViewClickedListener implements AdapterView.OnItemClickListener {
+        @Override
+        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+           mController.listServerBooks();
+        }
     }
 }

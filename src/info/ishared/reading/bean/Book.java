@@ -54,4 +54,15 @@ public class Book implements Serializable {
     public void setChapterSize(Integer chapterSize) {
         this.chapterSize = chapterSize;
     }
+
+    @Override
+    public String toString() {
+        return "Book{" +
+                "id=" + id +
+                ", bookNumber='" + bookNumber + '\'' +
+                ", bookName='" + bookName + '\'' +
+                ", bookSize='" + bookSize + '\'' +
+                ", chapterSize=" + chapterSize +
+                '}';
+    }
 }
