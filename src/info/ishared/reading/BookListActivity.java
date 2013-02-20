@@ -2,15 +2,14 @@ package info.ishared.reading;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.GridView;
-import android.widget.ImageView;
-import android.widget.SimpleAdapter;
+import android.widget.*;
+import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockActivity;
 import info.ishared.reading.bean.Book;
 import info.ishared.reading.controller.BookListController;
 import info.ishared.reading.util.CacheUtils;
@@ -24,27 +23,37 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.google.inject.Inject;
+
+import roboguice.inject.InjectExtra;
+import roboguice.inject.InjectView;
+
 /**
  * Created with IntelliJ IDEA.
  * User: Seven
  * Date: 12-12-19
  * Time: PM5:00
  */
-public class BookListActivity extends Activity {
-    private GridView mGridView;
+public class BookListActivity extends RoboSherlockActivity {
+    @InjectView(R.id.gridView) private GridView mGridView;
     private List<Map<String, Object>> gridItems = new ArrayList<Map<String, Object>>();
     private String bookNumber;
     private String chapterSize;
     private SimpleAdapter adapter;
     private BookListController mController;
+    @InjectView(R.id.test_btn) private Button mButton;
 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mController=new BookListController(this);
+        super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
-        mGridView = (GridView)this.findViewById(R.id.gridView);
+//        mGridView = (GridView)this.findViewById(R.id.gridView);
+//        mButton = (Button)this.findViewById(R.id.test_btn);
+
+
         initGridViewData();
         initGridViewGUI();
 //        mController.checkVersion();
