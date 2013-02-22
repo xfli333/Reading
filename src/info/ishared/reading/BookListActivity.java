@@ -13,6 +13,7 @@ import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockActivit
 import info.ishared.reading.bean.Book;
 import info.ishared.reading.controller.BookListController;
 import info.ishared.reading.util.CacheUtils;
+import info.ishared.reading.util.PageJumpUtils;
 import info.ishared.reading.util.ZipUtils;
 import org.apache.commons.compress.archivers.zip.ZipUtil;
 
@@ -56,6 +57,14 @@ public class BookListActivity extends RoboSherlockActivity {
 
         initGridViewData();
         initGridViewGUI();
+
+        mButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(BookListActivity.this, DownloadBookActivity.class);
+                BookListActivity.this.startActivity(intent);
+            }
+        });
 //        mController.checkVersion();
 
 //        try {

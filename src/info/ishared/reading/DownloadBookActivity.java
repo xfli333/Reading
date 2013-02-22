@@ -13,6 +13,7 @@ import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import info.ishared.reading.asyn.LoadNetworkImageTask;
 import info.ishared.reading.controller.DownloadController;
+import info.ishared.reading.util.AsynImageLoader;
 
 import java.io.IOException;
 import java.net.URL;
@@ -35,11 +36,14 @@ public class DownloadBookActivity extends Activity {
     private SimpleAdapter adapter;
 
     private DownloadController mController;
+    private AsynImageLoader mImageAsynLoader;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.download_book_list);
         mController = new DownloadController(this);
+        mHandler=new Handler();
+        mImageAsynLoader=new AsynImageLoader(mHandler);
 
         initGridViewData();
         initGridViewGUI();
@@ -64,7 +68,7 @@ public class DownloadBookActivity extends Activity {
         item.put("ItemText", "当月话费");
         item.put("ItemText2", "当月话费明细查询");
         item.put("itemId", 1);
-        item.put("ItemImageUrl", "http://www.exploremetro.com/blog/wp-content/uploads/2012/02/icon3.png");
+        item.put("ItemImageUrl", "http://www.casd-ev.org/space/data/attachment/common/d1/common_79_icon.png");
         gridItems.add(item);
 
         item = new HashMap<String, Object>();
@@ -72,7 +76,7 @@ public class DownloadBookActivity extends Activity {
         item.put("ItemText", "套餐余量");
         item.put("ItemText2", "当前剩余流量/购买流量包");
         item.put("itemId", 2);
-        item.put("ItemImageUrl", "http://www.exploremetro.com/blog/wp-content/uploads/2012/02/icon3.png");
+        item.put("ItemImageUrl", "http://icons.iconarchive.com/icons/thiago-silva/palm/96/Messaging-icon.png");
         gridItems.add(item);
 
         item = new HashMap<String, Object>();
@@ -132,20 +136,26 @@ public class DownloadBookActivity extends Activity {
      */
     private void initGridViewGUI() {
         adapter = new SimpleAdapter(this, gridItems, R.layout.download_list_item, new String[]{"ItemImage", "ItemText", "ItemText2"}, new int[]{R.id.item_image, R.id.item_text, R.id.item_text2}){
+
+
             @Override
             public View getView(final int position, View convertView, ViewGroup parent) {
                 View view = super.getView(position, convertView, parent);
                 final ImageView imageView = (ImageView)view.findViewById(R.id.item_image);
-                imageView.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            imageView.setImageDrawable(Drawable.createFromStream(new URL(gridItems.get(position).get("ItemImageUrl").toString()).openStream(), "src"));
-                        } catch (IOException e) {
-                            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-                        }
-                    }
-                });
+//                imageView.post(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        try {
+//                            imageView.setImageDrawable(Drawable.createFromStream(new URL(gridItems.get(position).get("ItemImageUrl").toString()).openStream(), "src"));
+//                        } catch (IOException e) {
+//                            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+//                        }
+//                    }
+//                });
+                mImageAsynLoader.setAdapter(this);
+                mImageAsynLoader.loadBitmap(imageView, gridItems.get(position).get("ItemImageUrl").toString());
+
+
 
 //                 new LoadNetworkImageTask(imageView,adapter).execute(gridItems.get(position).get("ItemImageUrl").toString());
                 return view;
